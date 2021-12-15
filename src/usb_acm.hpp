@@ -16,16 +16,20 @@ private:
     const usb_ep_desc_t * ep_in;
     const usb_ep_desc_t * ep_out;
     cdc_event_cb_t event_cb = nullptr;
-    bool connected;
+    uint8_t bNumInterfaces;
+    bool connected = false;
 
 public:
     USBacmDevice(const usb_config_desc_t* config_desc, USBhost*);
     ~USBacmDevice();
 
     bool init();
+    void clearEndPoint();
+    void release();
     void setControlLine(bool dtr, bool rts);
     void setLineCoding(uint32_t bitrate, uint8_t cf, uint8_t parity, uint8_t bits);
     void getLineCoding();
+    void clearCommFeature();
     void INDATA();
     void OUTDATA(uint8_t*, size_t);
     void onEvent(cdc_event_cb_t _cb);

@@ -7,6 +7,10 @@
 #define ENABLE_DTR(val)      (val<<0)
 #define ENABLE_RTS(val)      (val<<1)
 
+#define SET_COMM_FEATURE            0x02
+#define GET_COMM_FEATURE            0x03
+#define CLEAR_COMM_FEATURE          0x04
+
 #define SET_LINE_CODING 0x20
 #define GET_LINE_CODING 0x21
 #define SET_CONTROL_LINE_STATE 0x22
@@ -56,6 +60,13 @@
     (ctrl_req_ptr)->wLength = (0);   \
 })
 
+#define USB_CTRL_REQ_CDC_CLEAR_COMM_FEATURE(ctrl_req_ptr, index, dtr, rts) ({  \
+    (ctrl_req_ptr)->bmRequestType = SET_VALUE;   \
+    (ctrl_req_ptr)->bRequest = CLEAR_COMM_FEATURE;  \
+    (ctrl_req_ptr)->wValue = ENABLE_DTR(dtr) | ENABLE_RTS(rts);   \
+    (ctrl_req_ptr)->wIndex = (index);    \
+    (ctrl_req_ptr)->wLength = (0);   \
+})
 
 /// SCSI Command Operation Code
 typedef enum
@@ -119,9 +130,9 @@ typedef struct {
 } msc_transfer_cb_t;
 
 typedef struct{
-    uint32_t dwDTERate;
-    uint8_t bCharFormat;
-    uint8_t bParityType;
-    uint8_t bDataBits;
+    uint32_t dwDTERate;     // 波特率
+    uint8_t bCharFormat;    // 停止位
+    uint8_t bParityType;    // 校验位
+    uint8_t bDataBits;      // 数据位
 }line_coding_t;
 
